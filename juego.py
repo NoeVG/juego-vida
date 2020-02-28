@@ -108,8 +108,6 @@ try:
             pass
         if totalCellLives == 0:
             print("Enviroment Fail!")
-            cv2.namedWindow('image',10)
-            cv2.resizeWindow('image', 1200,1200)
             cv2.imshow('image',img)
             cv2.waitKey(0)
             input()
