@@ -1,5 +1,19 @@
+"""
+Title: The Game of Life
+Author: John Horton Conway
 
-'sudo pip install opencv-contrib-python'
+The Game of Life, also known simply as Life, is a cellular
+automaton devised by the British mathematician John Horton Conway in 1970.
+
+The game is a zero-player game, meaning that its evolution is determined by
+its initial state, requiring no further input. One interacts with the Game of
+Life by creating an initial configuration and observing how it evolves. It is
+Turing complete and can simulate a universal constructor or any other Turing machine.
+Source: (https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+
+This code to use is necesary install opencv to python, in Fedora :
+    sudo pip install opencv-contrib-python
+"""
 
 import cv2
 import matplotlib
@@ -10,6 +24,8 @@ from random import seed
 from random import randint
 
 limiteMax = 100
+checkMax = 10
+checkMin = 10
 
 n = 1
 b = 255
@@ -46,40 +62,35 @@ img = np.zeros((limiteMax, limiteMax, 1), dtype = "uint8")
 
 print('Press Ctrl-C to quit.')
 try:
+    cv2.namedWindow('image',10)
+    cv2.resizeWindow('image', 800,800)
+
     for x in range(1,len(img)-1):
         for y in range(1,len(img)-1):
             img[x][y] = b
             pass
         pass
-    'Initialize enviroment'
-
+    print('Initialize enviroment')
     start = 0
-    while start < 400:
-        x = randint(1,limiteMax-2)
-        y = randint(0,limiteMax-2)
-        img[x,y] = n
+    while start < 4:
+        x = randint(checkMin,limiteMax-checkMax)
+        y = randint(checkMin,limiteMax-checkMax)
+        cv2.circle(img, (x,y), 4, n, thickness=1, lineType=8, shift=0)
+        cv2.circle(img, (randint(checkMin,limiteMax-checkMax),y), 3, n, thickness=1, lineType=8, shift=0)
+        cv2.circle(img, (x,randint(checkMin,limiteMax-checkMax)), 1, n, thickness=1, lineType=8, shift=0)
         start+=1
 
-
     while True:
-        #x = randint(0,limiteMax-1)
-        #y = randint(0,limiteMax-1)
-        for x in range(1,len(img)-1):
-            for y in range(1,len(img)-1):
+        for x in range(checkMin,len(img)-checkMax):
+            for y in range(checkMin,len(img)-checkMax):
                 if img[x][y] == n:
                     cellLives = checkCellLives(img,x,y)
-                    #print(cellLives)
-
-                    if cellLives == 2:
-                        img[x][y] = n
-                    elif cellLives == 3:
+                    if cellLives == 2 or  cellLives == 3:
                         img[x][y] = n
                     else:
                         img[x][y] = b
                 elif img[x][y] == b:
                     cellLives = checkCellLives(img,x,y)
-                    #print(cellLives)
-
                     if cellLives == 3:
                         img[x][y] = n
                     else:
@@ -104,13 +115,8 @@ try:
             input()
             break
         else:
-            cv2.namedWindow('image',10)
-            cv2.resizeWindow('image', 800,800)
+            print("Run...")
             cv2.imshow('image',img)
             cv2.waitKey(4)
 except KeyboardInterrupt:
     print('\n')
-
-#cv2.imshow('image',img)
-#cv2.waitKey(0)
-#cv2.destroyAllWindows()
